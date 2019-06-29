@@ -1,0 +1,36 @@
+# Deployment is something new, so we use new version
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  #Give name and label to deployment
+  name: blogwrite-deployment
+  labels:
+    app: blogwrite
+spec:
+  #Describe replica set here
+  replicas: 3
+  #Make it wait for 10 seconds when new pod is activated before going into next pod(Useful for update)
+  minReadySeconds: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      # Tell kubernetes to take 1 pod at the time
+      maxUnavailable: 1
+      # Dont have more than 1 extra pod in a given time
+      maxSurge: 1
+  selector:
+    matchLabels:
+      #Make replica set load balance pod with label of app=nginx-hello 
+      app: blogwrite-app
+  template:
+    metadata:
+      labels:
+        # Set label value to pods:app=nginx-hello
+        app: blogwrite-app
+    spec:
+      containers:
+      - name: blogwrite-app
+        image: blogwrite
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8081

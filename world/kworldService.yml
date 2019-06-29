@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  #Name and label our service
+  name: kworld-app
+  labels:
+    app: kworld-app
+spec:
+  # Define type 
+  type: NodePort
+  selector:
+    #Select pods which has label nginx-hello
+    app: kworld-app
+  ports:
+  - protocol: TCP
+    port: 3000

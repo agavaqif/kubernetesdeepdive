@@ -1,0 +1,56 @@
+# Deployment is something new, so we use new version
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  #Give name and label to deployment
+  name: mars-deployment
+  labels:
+    app: mars
+spec:
+  #Describe replica set here
+  replicas: 3
+  #Make it wait for 10 seconds when new pod is activated before going into next pod(Useful for update)
+  minReadySeconds: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      # Tell kubernetes to take 1 pod at the time
+      maxUnavailable: 1
+      # Dont have more than 1 extra pod in a given time
+      maxSurge: 1
+  selector:
+    matchLabels:
+      #Make replica set load balance pod with label of app=mars-app
+      app: mars-app
+  template:
+    metadata:
+      labels:
+        # Set label value to pods:app=mars-app
+        app: mars-app
+    spec:
+      containers:
+      - name: mars-app
+        image: mars-image
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 3001
+
+--- 
+
+apiVersion: v1
+kind: Service
+metadata:
+  #Name and label our service
+  name: mars-app
+  labels:
+    app: mars-app
+spec:
+  # Define type 
+  type: NodePort
+  selector:
+    #Select pods which has label mars-app
+    app: mars-app
+  ports:
+  - protocol: TCP
+    port: 3001
+    targetPort: 3001

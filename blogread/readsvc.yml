@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  #Name and label our service
+  name: blogread-app
+  labels:
+    app: blogread-app
+spec:
+  # Define type 
+  type: ClusterIP
+  selector:
+    #Select pods which has label blogread-app
+    app: blogread-app
+  ports:
+  - protocol: TCP
+    port: 8080

@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: example-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+ rules:
+ - host: hello-world.info
+   http:
+     paths:
+     - path: /mars
+       backend:
+         serviceName: mars-app
+         servicePort: 3001
+     - path: /world
+       backend:
+         serviceName: world-app
+         servicePort: 3000

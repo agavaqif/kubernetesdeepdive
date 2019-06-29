@@ -1,0 +1,26 @@
+# Start minikube
+minikube start
+
+# Set docker env
+eval $(minikube docker-env) => Changes docker machine enviroment into kubernetes docker
+
+# Build image
+docker build -t foo:0.0.1 .
+
+# Run in minikube
+kubectl run hello-foo --image=foo:0.0.1 --image-pull-policy=Never
+
+# Check that it's running
+kubectl get pods
+
+
+
+
+*http://kubernetesbyexample.com/sd/
+
+
+kubectl exec -it jumpod -c shell -- ping blogread-app.default.svc.cluster.local
+
+kubectl exec -it jumpod -c shell -- curl http://blogread-app:8080
+
+minikube addons enable nginx
